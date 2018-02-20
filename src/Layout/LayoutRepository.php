@@ -1,8 +1,9 @@
-<?php namespace Anomaly\Streams\Platform\Field;
+<?php namespace Anomaly\Streams\Platform\Layout;
 
+use Anomaly\Streams\Platform\Layout\Contract\LayoutInterface;
 use Anomaly\Streams\Platform\Layout\Contract\LayoutRepositoryInterface;
-use Anomaly\Streams\Platform\Layout\LayoutModel;
 use Anomaly\Streams\Platform\Model\EloquentRepository;
+use Anomaly\Streams\Platform\Stream\Contract\StreamInterface;
 
 /**
  * Class LayoutRepository
@@ -30,4 +31,20 @@ class LayoutRepository extends EloquentRepository implements LayoutRepositoryInt
     {
         $this->model = $model;
     }
+
+    /**
+     * Find a layout by it's stream and slug.
+     *
+     * @param StreamInterface $stream
+     * @param                 $slug
+     * @return LayoutInterface|null
+     */
+    public function findByStreamAndSlug(StreamInterface $stream, $slug)
+    {
+        return $this->model
+            ->where('stream_id', $stream->getId())
+            ->where('slug', $slug)
+            ->first();
+    }
+
 }

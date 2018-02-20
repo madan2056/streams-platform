@@ -27,14 +27,33 @@ class LayoutFormBuilder extends FormBuilder
     protected $stream;
 
     /**
+     * The layout slug.
+     *
+     * @var string
+     */
+    protected $layout;
+
+    /**
      * The form fields.
+     *
+     * @var string|array
+     */
+    protected $fields = LayoutFormFields::class;
+
+    /**
+     * The form sections.
+     *
+     * @var string|array
+     */
+    protected $sections = LayoutFormSections::class;
+
+    /**
+     * The form actions.
      *
      * @var array
      */
-    protected $fields = [
-        'sections' => [
-            'type' => 'anomaly.field_type.textarea',
-        ],
+    protected $actions = [
+        'save',
     ];
 
     /**
@@ -43,13 +62,10 @@ class LayoutFormBuilder extends FormBuilder
      * @var array
      */
     protected $buttons = [
-        'add_tabs'    => [
-            'text'     => 'Add Tabs',
-            'data-add' => 'tabs',
-        ],
         'add_section' => [
-            'text'     => 'Add Tabs',
-            'data-add' => 'section',
+            'button' => 'add',
+            'type'   => 'primary',
+            'text'   => 'Add Section',
         ],
     ];
 
@@ -83,6 +99,29 @@ class LayoutFormBuilder extends FormBuilder
     public function setStream(StreamInterface $stream)
     {
         $this->stream = $stream;
+
+        return $this;
+    }
+
+    /**
+     * Get the layout.
+     *
+     * @return string
+     */
+    public function getLayout()
+    {
+        return $this->layout;
+    }
+
+    /**
+     * Set the layout.
+     *
+     * @param $layout
+     * @return $this
+     */
+    public function setLayout($layout)
+    {
+        $this->layout = $layout;
 
         return $this;
     }

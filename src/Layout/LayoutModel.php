@@ -18,4 +18,25 @@ class LayoutModel extends EloquentModel
      * @var string
      */
     protected $table = 'streams_layouts';
+
+    /**
+     * Get the sections.
+     *
+     * @return array
+     */
+    public function getSections()
+    {
+        return $this->sections;
+    }
+
+    /**
+     * Get the sections attribute.
+     *
+     * @return array
+     */
+    public function getSectionsAttribute()
+    {
+        return unserialize($this->attributes['sections'] ?: 'a:0:{}');
+    }
+
 }
