@@ -81,7 +81,7 @@ class FieldFactory
 
             /* @var EntryInterface $entry */
             $field->setValue(
-                (!is_null($value)) ? $modifier->restore($value) : $entry->getAttribute($field->getField())
+                (!is_null($value)) ? $modifier->restore($value) : $value
             );
         } elseif (is_object($entry)) {
             $field    = $this->builder->build($parameters);
@@ -106,6 +106,9 @@ class FieldFactory
             ->mergeConfig(array_pull($parameters, 'config', []))
             ->mergeMessages(array_pull($parameters, 'messages', []))
             ->mergeValidators(array_pull($parameters, 'validators', []));
+
+        // Add the form builder.
+        $parameters['form'] = $this->builder;
 
         // Hydrate the field with parameters.
         $this->hydrator->hydrate($field, $parameters);

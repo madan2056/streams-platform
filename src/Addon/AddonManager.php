@@ -31,6 +31,13 @@ class AddonManager
     protected $addons;
 
     /**
+     * The addon loader.
+     *
+     * @var AddonLoader
+     */
+    protected $loader;
+
+    /**
      * The service container.
      *
      * @var Container
@@ -69,6 +76,7 @@ class AddonManager
      * Create a new AddonManager instance.
      *
      * @param AddonPaths      $paths
+     * @param AddonLoader     $loader
      * @param ModuleModel     $modules
      * @param Container       $container
      * @param Dispatcher      $dispatcher
@@ -78,6 +86,7 @@ class AddonManager
      */
     public function __construct(
         AddonPaths $paths,
+        AddonLoader $loader,
         ModuleModel $modules,
         Container $container,
         Dispatcher $dispatcher,
@@ -87,17 +96,21 @@ class AddonManager
     ) {
         $this->paths      = $paths;
         $this->addons     = $addons;
+        $this->loader     = $loader;
         $this->modules    = $modules;
         $this->container  = $container;
         $this->integrator = $integrator;
         $this->dispatcher = $dispatcher;
         $this->extensions = $extensions;
+        $this->loader     = $loader;
     }
 
     /**
      * Register all addons.
+     *
+     * @param bool $reload
      */
-    public function register()
+    public function register($reload = false)
     {
         $enabled   = $this->getEnabledAddonNamespaces();
         $installed = $this->getInstalledAddonNamespaces();
@@ -117,6 +130,33 @@ class AddonManager
         );
 
         $paths = $this->paths->all();
+
+        /**
+         * If we need to load then
+         * loop and load all the addons.
+         */
+        if ($reload) {
+            $this->loader->load($paths);
+            $this->loader->register();
+            $this->loader->dump();
+        }
+
+        /**
+         * Autoload testing addons.
+         */
+        if (env('APP_ENV') === 'testing' && $testing = $this->paths->testing()) {
+
+            foreach ($testing as $path) {
+                $this->loader->load($path);
+            }
+
+            $this->loader->classLoader()->addPsr4(
+                'Anomaly\\StreamsPlatformTests\\',
+                base_path('vendor/anomaly/streams-platform/tests')
+            );
+
+            $this->loader->register();
+        }
 
         /*
          * Register all of the addons.
