@@ -63,9 +63,10 @@ class LayoutFormBuilder extends FormBuilder
      */
     protected $buttons = [
         'add_section' => [
-            'button' => 'add',
-            'type'   => 'primary',
-            'text'   => 'Add Section',
+            'button'   => 'add',
+            'type'     => 'primary',
+            'text'     => 'Add Section',
+            'href' => ''
         ],
     ];
 
